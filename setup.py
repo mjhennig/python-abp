@@ -20,7 +20,6 @@ from setuptools import setup, Command
 
 DEVENV = 'devenv'
 PIP = path.join(DEVENV, 'bin', 'pip')
-DEV_DEPENDENCIES = ['pytest', 'mock', 'tox']
 
 
 class DevEnvCommand(Command):
@@ -31,13 +30,14 @@ class DevEnvCommand(Command):
 
     def initialize_options(self):
         self.python = 'python'
+        self.source = path.dirname(path.realpath(__file__))
 
     def finalize_options(self):
-        pass
+        self.requirements = path.join(self.source, 'requirements-dev.txt')
 
     def run(self):
         subprocess.check_call(['virtualenv', '-p', self.python, DEVENV])
-        subprocess.check_call([PIP, 'install'] + DEV_DEPENDENCIES)
+        subprocess.check_call([PIP, 'install', '-r', self.requirements])
         subprocess.check_call([PIP, 'install', '-e', '.'])
 
 
