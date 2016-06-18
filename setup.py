@@ -18,25 +18,26 @@ from os import path
 from setuptools import setup, Command
 
 
-DEVENV = 'devenv'
-
-
 class DevEnvCommand(Command):
     """Set up development virtualenv."""
 
     description = 'set up development virtualenv'
-    user_options = [('python=', 'p', 'the python interpreter to use')]
+    user_options = [
+        ('python=', 'p', 'the python interpreter to use'),
+        ('target=', 'p', 'a custom target directory'),
+    ]
 
     def initialize_options(self):
         self.python = 'python'
         self.source = path.dirname(path.realpath(__file__))
+        self.target = 'devenv'
 
     def finalize_options(self):
         self.requirements = path.join(self.source, 'requirements-dev.txt')
-        self.pip = path.join(DEVENV, 'bin', 'pip')
+        self.pip = path.join(self.target, 'bin', 'pip')
 
     def run(self):
-        subprocess.check_call(['virtualenv', '-p', self.python, DEVENV])
+        subprocess.check_call(['virtualenv', '-p', self.python, self.target])
         subprocess.check_call([self.pip, 'install', '-r', self.requirements])
         subprocess.check_call([self.pip, 'install', '-e', self.source])
 
