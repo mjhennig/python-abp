@@ -19,7 +19,6 @@ from setuptools import setup, Command
 
 
 DEVENV = 'devenv'
-PIP = path.join(DEVENV, 'bin', 'pip')
 
 
 class DevEnvCommand(Command):
@@ -34,11 +33,12 @@ class DevEnvCommand(Command):
 
     def finalize_options(self):
         self.requirements = path.join(self.source, 'requirements-dev.txt')
+        self.pip = path.join(DEVENV, 'bin', 'pip')
 
     def run(self):
         subprocess.check_call(['virtualenv', '-p', self.python, DEVENV])
-        subprocess.check_call([PIP, 'install', '-r', self.requirements])
-        subprocess.check_call([PIP, 'install', '-e', self.source])
+        subprocess.check_call([self.pip, 'install', '-r', self.requirements])
+        subprocess.check_call([self.pip, 'install', '-e', self.source])
 
 
 setup(
