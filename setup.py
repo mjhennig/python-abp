@@ -38,7 +38,7 @@ class DevEnvCommand(Command):
     def run(self):
         subprocess.check_call(['virtualenv', '-p', self.python, DEVENV])
         subprocess.check_call([PIP, 'install', '-r', self.requirements])
-        subprocess.check_call([PIP, 'install', '-e', '.'])
+        subprocess.check_call([PIP, 'install', '-e', self.source])
 
 
 setup(
